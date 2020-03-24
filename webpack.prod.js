@@ -1,6 +1,8 @@
 const path = require('path')
 const webpack = require('webpack')
 const  MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   // watch: true,
@@ -71,6 +73,35 @@ module.exports = {
   plugins: [
     new MiniCssExtractPlugin({
       filename: '[name]_[contenthash:8].css'
+    }),
+    new OptimizeCSSAssetsPlugin({
+      assetNameRegExp: /\.css$/g,
+      cssProcessor: require('cssnano')
+    }),
+    // 一个页面对应一个htmlWebpackPlugin
+    new HtmlWebpackPlugin({ // 打包输出HTML
+      template: path.join(__dirname, 'src/search.html'),
+      filename: 'search.html',
+      chunks: ['search'],
+      inject: true,
+      minify: { // 压缩HTML文件
+        html5: true,
+        removeComments: true, // 移除HTML中的注释
+        collapseWhitespace: true, // 删除空白符与换行符
+        minifyCSS: true// 压缩内联css
+      }
+    }),
+    new HtmlWebpackPlugin({ // 打包输出HTML
+      template: path.join(__dirname, 'src/index.html'),
+      filename: 'index.html',
+      chunks: ['index'],
+      inject: true, 
+      minify: { // 压缩HTML文件
+        html5: true,
+        removeComments: true, // 移除HTML中的注释
+        collapseWhitespace: true, // 删除空白符与换行符
+        minifyCSS: true// 压缩内联css
+      }
     })
   ]
 }
