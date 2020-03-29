@@ -3,6 +3,7 @@ const webpack = require('webpack')
 const  MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 module.exports = {
   // watch: true,
@@ -41,7 +42,18 @@ module.exports = {
         use: [
           MiniCssExtractPlugin.loader,
           'css-loader',
-          'less-loader'
+          'less-loader',
+          'postcss-loader'
+          // {
+          //   loader: 'postcss-loader',
+          //   options: {
+          //     plugins: () => [
+          //       require('autoprefixer')({
+          //         browsers: ['last 2 versions', '> 1%', 'iOS 7']
+          //       })
+          //     ]
+          //   }
+          // }
         ]
       },
       {
@@ -102,6 +114,7 @@ module.exports = {
         collapseWhitespace: true, // 删除空白符与换行符
         minifyCSS: true// 压缩内联css
       }
-    })
+    }),
+    new CleanWebpackPlugin()
   ]
 }
